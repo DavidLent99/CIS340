@@ -14,9 +14,7 @@ const onTap = () => setCout(count => count + 1);
         <Text> Tap Counter: {count} </Text>
       </View>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={onTap}>
+      <TouchableOpacity style={styles.button} onPress={onTap}>
 
         <Text> Touch Me </Text>
 

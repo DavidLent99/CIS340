@@ -4,6 +4,8 @@ import * as ImagePicker from 'expo-image-picker'//import
 
 export default function MyApp () {
 
+  const [selectedImage, setSelectedImage ] = React.useState(null)
+
   let openImagePickerAsync = async () => {
 
     let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -17,10 +19,26 @@ export default function MyApp () {
 
     }
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-      console.log(pickerResult);
-
       
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    setSelectedImage({ localUri: pickerResult.uri});
+
+
+  };
+
+  //display selected image
+  if (selectedImage != null) {
+    return(
+      <View style={styles.container}>
+        <Image source={{uri: selectedImage.localUri}} style={{styles.selImage}}/>
+      </View>
+    )
   }
+
+  //end of the code
 
   return (
     <View style={styles.container}>
@@ -33,7 +51,7 @@ export default function MyApp () {
         Press the button below to select an image on your phone
       </Text>
 
-      <TouchableOpacity style={styles.button} onPress={() => alert('You have not selected an image yet')}>
+      <TouchableOpacity style={styles.button} onPress={openImagePickerAsync}>
 
         <Text style={styles.buttonText}>Pick Image</Text>
 
@@ -75,5 +93,11 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: "#fff"
+  },
+
+  selImage {
+    width: 300,
+    height: 300,
+    resizeMode: 'contain'
   }
 });

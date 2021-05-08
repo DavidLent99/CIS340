@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'//import
+import * as ImagePicker from 'expo-image-picker'//import image picker
+import * as Sharing from 'expo-sharing'; //import image sharing
 
 export default function MyApp () {
+
+  const [selectedImage, setSelectedImage ] = React.useState(null)
 
   let openImagePickerAsync = async () => {
 
@@ -17,10 +20,40 @@ export default function MyApp () {
 
     }
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-      console.log(pickerResult);
-
       
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    setSelectedImage({ localUri: pickerResult.uri});
+
+
+  };
+
+  // add the sharing image dialog  
+  let openSharingDialogAsy = async () => {
+      if ( !(await Sharing.isAvailableAsync())) {
+        alert('Sharing is not available on my phone');
+        return;
+      }
+
+      Sharing.shareAsync(slectedImage.localUri);
+  };
+
+  //display selected image
+  if (selectedImage != null) {
+    return(
+      <View style={styles.container}>
+        <Image source={{uri: selectedImage.localUri}} style={{styles.selImage}}/>
+
+        <TouchableOpacity onPress={openSharingDialogAsy} style={styles.button}>
+          <Text> style={styles.buttonText} Share My Photo</Text>
+        </TouchableOpacity>
+      </View>
+    )
   }
+
+  //end of the code
 
   return (
     <View style={styles.container}>
@@ -33,7 +66,7 @@ export default function MyApp () {
         Press the button below to select an image on your phone
       </Text>
 
-      <TouchableOpacity style={styles.button} onPress={() => alert('You have not selected an image yet')}>
+      <TouchableOpacity style={styles.button} onPress={openImagePickerAsync}>
 
         <Text style={styles.buttonText}>Pick Image</Text>
 
@@ -75,5 +108,11 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: "#fff"
+  },
+
+  selImage {
+    width: 300,
+    height: 300,
+    resizeMode: 'contain'
   }
 });

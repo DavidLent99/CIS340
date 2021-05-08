@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 20,
+    justifyContent: 'center',
     backgroundColor: "#FFFFE0"
   },
 
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 305,
+    width: 310,
     height: 300,
     marginBotton: 20
   },
